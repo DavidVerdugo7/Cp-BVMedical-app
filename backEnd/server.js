@@ -15,14 +15,12 @@ app.get("/", (req, res) => {
 
 const userRoutes = require("./Routes/userRoutes");
 const medicalEquipmentRoutes = require("./Routes/medicalEquipmentRoutes");
-
-// const assessmentRoutes = require("./Routes/assessmentRoutes");
+const assessmentRoutes = require("./Routes/assessmentRoutes");
 
 //this are server Routes
 app.use("/api/users", userRoutes);
 app.use("/api/medical-equipment", medicalEquipmentRoutes);
-
-// app.use("/api/assessments", assessmentRoutes);
+app.use("/api/assessments", assessmentRoutes);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

@@ -2,21 +2,18 @@
 
 const User = require("./users");
 const MedicalEquipment = require("./medicalEquipment");
-
-// const Assessment = require("./assessments");
+const Assessment = require("./assessments");
 
 async function init() {
   await User.sync();
   await MedicalEquipment.sync();
-
-  // await Assessment.sync();
+  await Assessment.sync();
 }
 
 init();
 
 module.exports = {
-  User, // Exporta el modelo User
+  User,
   MedicalEquipment,
-
-  // Assessment,
+  Assessment,
 };

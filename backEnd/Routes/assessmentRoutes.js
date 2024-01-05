@@ -3,19 +3,19 @@ let router = express.Router();
 let Controllers = require("../controllers"); //index.js
 
 router.get("/", (req, res) => {
-  Controllers.likeController.getLikes(res);
+  Controllers.assessmentController.getAssessments(res);
 });
 
 router.post("/create", (req, res) => {
-  Controllers.likeController.createLike(req.body, res);
+  Controllers.assessmentController.createAssessment(req.body, res);
 });
 
 router.put("/:id", (req, res) => {
-  Controllers.likeController.updateLike(req, res);
+  Controllers.assessmentController.updateAssessment(req, res);
 });
 
 router.delete("/:id", (req, res) => {
-  Controllers.likeController.deleteLike(req, res);
+  Controllers.assessmentController.deleteAssessment(req, res);
 });
 
 module.exports = router;

@@ -2,8 +2,8 @@
 
 const Models = require("../models");
 
-const getLikes = (res) => {
-  Models.Like.findAll({})
+const getAssessments = (res) => {
+  Models.Assessment.findAll({})
     .then(function (data) {
       res.send({ result: 200, data: data });
     })
@@ -12,9 +12,9 @@ const getLikes = (res) => {
     });
 };
 
-const createLike = (data, res) => {
-  // TRIM VALUES BEFORE CALLING SQL unlike MongoDB's trim
-  Models.Like.create(data)
+const createAssessment = (data, res) => {
+  // Ajustar los datos si es necesario antes de llamar a SQL, por ejemplo, validaciones, formateo, etc.
+  Models.Assessment.create(data)
     .then(function (data) {
       res.send({ result: 200, data: data });
     })
@@ -23,8 +23,8 @@ const createLike = (data, res) => {
     });
 };
 
-const updateLike = (req, res) => {
-  Models.Like.update(req.body, { where: { id: req.params.id } })
+const updateAssessment = (req, res) => {
+  Models.Assessment.update(req.body, { where: { id: req.params.id } })
     .then(function (data) {
       res.send({ result: 200, data: data });
     })
@@ -32,8 +32,9 @@ const updateLike = (req, res) => {
       throw err;
     });
 };
-const deleteLike = (req, res) => {
-  Models.Like.destroy({ where: { id: req.params.id } })
+
+const deleteAssessment = (req, res) => {
+  Models.Assessment.destroy({ where: { id: req.params.id } })
     .then(function (data) {
       res.send({ result: 200, data: data });
     })
@@ -43,8 +44,8 @@ const deleteLike = (req, res) => {
 };
 
 module.exports = {
-  getLikes,
-  createLike,
-  updateLike,
-  deleteLike,
+  getAssessments,
+  createAssessment,
+  updateAssessment,
+  deleteAssessment,
 };
