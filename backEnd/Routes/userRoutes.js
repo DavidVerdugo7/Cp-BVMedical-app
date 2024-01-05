@@ -6,10 +6,10 @@ router.get("/", (req, res) => {
   Controllers.userController.getUsers(res);
 });
 
-// //to GET an User
-// router.get("/:id", (req, res) => {
-//   Controllers.userController.getUserById(req.params.id, res);
-// });
+//to GET an User by id
+router.get("/:id", (req, res) => {
+  Controllers.userController.getUserById(req.params.id, res);
+});
 
 router.post("/create", (req, res) => {
   Controllers.userController.createUser(req.body, res);

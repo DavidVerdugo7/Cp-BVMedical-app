@@ -1,6 +1,7 @@
 "use strict";
 
 const Models = require("../models");
+const { Assessment } = require("../models");
 
 const getAssessments = (res) => {
   Models.Assessment.findAll({})
@@ -10,6 +11,20 @@ const getAssessments = (res) => {
     .catch((err) => {
       throw err;
     });
+};
+//GET an assessment by Id
+const getAssessmentById = async (id, res) => {
+  try {
+    const assessment = await Assessment.findByPk(id);
+
+    if (!assessment) {
+      return res.status(404).json({ message: "Assessment not found" });
+    }
+
+    res.status(200).json(assessment);
+  } catch (error) {
+    res.status(500).json({ message: "Error trying to find assessment by ID " });
+  }
 };
 
 const createAssessment = (data, res) => {
@@ -45,6 +60,7 @@ const deleteAssessment = (req, res) => {
 
 module.exports = {
   getAssessments,
+  getAssessmentById,
   createAssessment,
   updateAssessment,
   deleteAssessment,

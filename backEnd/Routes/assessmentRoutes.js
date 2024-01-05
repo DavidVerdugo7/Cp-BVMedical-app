@@ -6,6 +6,11 @@ router.get("/", (req, res) => {
   Controllers.assessmentController.getAssessments(res);
 });
 
+// //to GET an Assessment by id
+router.get("/:id", (req, res) => {
+  Controllers.assessmentController.getAssessmentById(req.params.id, res);
+});
+
 router.post("/create", (req, res) => {
   Controllers.assessmentController.createAssessment(req.body, res);
 });
