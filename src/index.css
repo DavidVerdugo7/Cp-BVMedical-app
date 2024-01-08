@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  min-width: 100vh;
+  min-height: 100vh;
+  place-items: center;
+  justify-content: center;
+  font-family: "Arimo", sans-serif, "Josefin Sans", sans-serif, "Lato",
+    sans-serif, "Roboto Condensed", sans-serif, "Delicious Handrawn", cursive; /* Última opción de fuente, en este caso, una fuente cursive */
+}
+
+/* Cambiar el tamaño y peso de diferentes elementos */
+h1 {
+  font-size: 25px;
+  font-weight: 500;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 400;
+}

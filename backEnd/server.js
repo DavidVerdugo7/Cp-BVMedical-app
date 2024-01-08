@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+//  middleware  CORS
+app.use(cors());
+
 require("dotenv").config();
 
 // parse requests of content-type -application / json;
