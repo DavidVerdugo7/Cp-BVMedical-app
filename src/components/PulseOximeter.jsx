@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+import CardEquipment from "./CardEquipment";
+import { useLocation } from "react-router-dom";
 
-export default function PulseOximeter() {
+export default function pulseOximeter() {
   const initialSpo2Values = [80, 80, 80]; // Valores iniciales de SPO2
   const initialPulseValues = [60, 60, 60]; // Valores iniciales de Pulse
   const [spo2Values, setSpo2Values] = useState(initialSpo2Values);
   const [pulseValues, setPulseValues] = useState(initialPulseValues);
   const [isFunctionalYes, setIsFunctionalYes] = useState(null);
-  const [location, setLocation] = useState("");
   const [comments, setComments] = useState("");
+  //useLocation from react
+  const location = useLocation();
+  const { selectedEquipment } = location.state || {};
 
   const handleChange = (type, index, value) => {
     if (type === "spo2") {
@@ -53,10 +57,6 @@ export default function PulseOximeter() {
     }
   };
 
-  const handleLocationChange = (e) => {
-    setLocation(e.target.value);
-  };
-
   const handleCommentsChange = (e) => {
     setComments(e.target.value);
   };
@@ -71,7 +71,13 @@ export default function PulseOximeter() {
   };
 
   return (
-    <div className="cardForm p-10 md:p-6  justify-center mt-28">
+    <div className="cardForm  p-2 sm:py-6 lg:p-6 justify-center my-2 mx-12  lg:mt-6  sm:mx-24 lg:mx-64 ">
+      {selectedEquipment ? (
+        <CardEquipment equipment={selectedEquipment} />
+      ) : (
+        <p>No equipment selected</p>
+      )}
+
       <div>
         <div>
           <h2>SPO2</h2>
@@ -79,7 +85,7 @@ export default function PulseOximeter() {
             <div key={index}>
               <button onClick={() => decrementValue("spo2", index)}>-</button>
               <input
-                className="input input-bordered w-full max-w-xs m-4"
+                className="input input-bordered  w-20 max-w-xs m-4"
                 type="number"
                 value={spo2}
                 onChange={(e) =>
@@ -92,12 +98,12 @@ export default function PulseOximeter() {
           ))}
         </div>
         <div>
-          <h2>Pulse</h2>
+          <h2 className="mt-4">Pulse</h2>
           {pulseValues.map((pulse, index) => (
             <div key={index}>
               <button onClick={() => decrementValue("pulse", index)}>-</button>
               <input
-                className="input input-bordered w-full max-w-xs m-4"
+                className="input input-bordered  w-20 max-w-xs m-4"
                 type="number"
                 value={pulse}
                 onChange={(e) =>
@@ -112,9 +118,8 @@ export default function PulseOximeter() {
       </div>
 
       {/*  CHECKBOX */}
-      <div>
-        <h2>Functional</h2>
-
+      <h2 className="mt-4">Functional</h2>
+      <div className="flex justify-evenly items-center flex-wrap mt-4 sm:w-full">
         <div className="form-control  items-center">
           <label className="cursor-pointer label">
             <p className="label-text">Yes</p>
@@ -146,22 +151,11 @@ export default function PulseOximeter() {
         </div>
       </div>
       {/* TEST AREA LOCATION, COMMENTS */}
-      <div>
-        <h2>Location</h2>
 
+      <h2>Comments</h2>
+      <div className="flex justify-evenly items-center flex-wrap">
         <textarea
-          className="textarea textarea-bordered"
-          placeholder="Location"
-          value={location}
-          onChange={handleLocationChange}
-          rows="2"
-          cols="40"
-        />
-      </div>
-      <div>
-        <h2>Comments</h2>
-        <textarea
-          className="textarea textarea-bordered"
+          className=" textarea textarea-bordered mt-4 "
           placeholder="comments"
           value={comments}
           onChange={handleCommentsChange}
@@ -170,19 +164,21 @@ export default function PulseOximeter() {
         />
       </div>
       {/* BUTTONS TO SUBMMIT */}
-      <button
-        className="btn mt-10 mr-10 btn-error"
-        onClick={() => handleStatus("Failed")}
-      >
-        Failed
-      </button>
+      <div className="flex justify-evenly items-center flex-wrap sm:flex-nowrap md:flex-wrap">
+        <button
+          className="btn mt-10 mr-10 btn-error"
+          onClick={() => handleStatus("Failed")}
+        >
+          Failed
+        </button>
 
-      <button
-        className="btn mt-10 ml-10 btn-success"
-        onClick={() => handleStatus("Verified")}
-      >
-        Verified
-      </button>
+        <button
+          className="btn mt-10 ml-10 btn-success"
+          onClick={() => handleStatus("Verified")}
+        >
+          Verified
+        </button>
+      </div>
     </div>
   );
 }

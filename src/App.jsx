@@ -11,23 +11,26 @@ import PulseOximeter from "./components/PulseOximeter";
 import Scale from "./components/Scale";
 import Thermometer from "./components/Thermometer";
 import Footer from "./components/Footer";
+import { AuthProvider } from "./hooks/AuthContext";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <NavBar />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/cardEquipment" element={<ItemSpecs />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/pulseOximeter" element={<PulseOximeter />} />
-          <Route path="/scale" element={<Scale />} />
-          <Route path="/thermometer" element={<Thermometer />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <NavBar />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/cardEquipment" element={<ItemSpecs />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/pulseOximeter" element={<PulseOximeter />} />
+            <Route path="/scale" element={<Scale />} />
+            <Route path="/thermometer" element={<Thermometer />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </AuthProvider>
     </>
   );
 }

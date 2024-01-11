@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { AuthContext } from "../hooks/AuthContext";
 
 const navbarStyles = {
   background: "#242746",
@@ -11,61 +13,64 @@ const navbarStyles = {
 };
 
 export default function NavBar() {
+  const { isLoggedIn } = useContext(AuthContext);
+
+  if (!isLoggedIn) {
+    return null;
+  }
+
   return (
     <>
-      <div className="navbar bg-base-100 mb-8 " style={navbarStyles}>
-        <div className="navbar-start">
-          <div className="dropdown">
+      <div className="navbar bg-base-100 mb-8" style={navbarStyles}>
+        <div className="flex-1">
+          {/* <a className="btn btn-ghost text-xl">VBMedical</a> */}
+          <Link className="btn btn-ghost text-xl" to="/home">
+            VBMedical
+          </Link>
+        </div>
+        <div className="flex-none gap-2">
+          {/* <div className="form-control">
+            <input
+              type="text"
+              placeholder="Search"
+              className="input input-bordered w-24 md:w-auto"
+            />
+          </div> */}
+          <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
               role="button"
-              className="btn btn-ghost btn-circle"
+              className="btn btn-ghost btn-circle avatar"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h7"
+              <div className="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
                 />
-              </svg>
+              </div>
             </div>
             <ul
-              style={navbarStyles}
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
             >
               <li>
-                <Link to="/history">Histoy</Link>
+                <Link to="/history">🗂️ &nbsp; &nbsp; Today’s Work</Link>
               </li>
-              <li>
-                <Link to="/home">ID Search</Link>
+              <li className="mt-5">
+                <Link to="/home">🔎 &nbsp; &nbsp; ID Search</Link>
               </li>
-              <li>
-                <a>About</a>
+              <li className="mt-5">
+                <a>🩻 &nbsp; &nbsp; About Us</a>
               </li>
-              <br />
-              <li className="mt-64">
-                <Link to="/login">Sign Out</Link>
+              <hr
+                className="mt-40"
+                style={{ width: "80%", height: "2px", backgroundColor: "#000" }}
+              />
+
+              <li className="mt-5">
+                <Link to="/login">Close session</Link>
               </li>
             </ul>
-          </div>
-        </div>
-        <div className="navbar-center">
-          <a className="btn btn-ghost text-md">BVMedical App</a>
-        </div>
-        <div className="navbar-end">
-          {/* AVATAR PHOTO */}
-          <div className="avatar">
-            <div className="w-12 h-12 rounded-xl">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-            </div>
           </div>
         </div>
       </div>

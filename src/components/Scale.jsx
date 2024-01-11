@@ -66,20 +66,45 @@ export default function Scale() {
   const handleCommentsChange = (e) => {
     setComments(e.target.value);
   };
+  //POST request to DB
+  const handlePostRequest = async (status, equipmentId) => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/assessments/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: status,
+            scaleValues: scaleValues,
+            readingValues: readingValues,
+            comments: comments,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const handleStatus = (status) => {
-    // Manejar la lógica para los botones de "Failed" y "Verified"
     if (status === "Failed") {
-      // Lógica para el estado "Failed"
+      handlePostRequest(status, selectedEquipment.id);
     } else if (status === "Verified") {
-      // Lógica para el estado "Verified"
+      handlePostRequest(status, selectedEquipment.id);
     }
   };
 
   return (
     <>
       <div className="cardForm  p-2 sm:py-6 lg:p-6 justify-center my-2 mx-12  lg:mt-6  sm:mx-24 lg:mx-64 ">
-        {/* <div className="cardForm p-2 md:p-4 lg:p-6 justify-center mt-2 md:mt-4 lg:mt-6 sm:mx-20 "> */}
         {selectedEquipment ? (
           <CardEquipment equipment={selectedEquipment} />
         ) : (
@@ -93,7 +118,10 @@ export default function Scale() {
                 className="flex justify-evenly items-center flex-wrap mt-4 sm:w-full"
                 key={index}
               >
-                <button onClick={() => decrementValue("scale", index)}>
+                <button
+                  className="btn btn-outline btn-warning"
+                  onClick={() => decrementValue("scale", index)}
+                >
                   -
                 </button>
                 <input
@@ -109,7 +137,10 @@ export default function Scale() {
                     )
                   }
                 />
-                <button onClick={() => incrementValue("scale", index)}>
+                <button
+                  className="btn btn-outline btn-success"
+                  onClick={() => incrementValue("scale", index)}
+                >
                   +
                 </button>
                 <textarea
@@ -129,7 +160,8 @@ export default function Scale() {
 
         {/*  CHECKBOX */}
 
-        <h2>Functional</h2>
+        <h2 className="mt-4">Functional</h2>
+
         <div className="flex justify-evenly items-center flex-wrap mt-4 sm:w-full ">
           <div className="form-control  items-center">
             <label className="cursor-pointer label">

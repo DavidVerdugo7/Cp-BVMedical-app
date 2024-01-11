@@ -1,22 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../hooks/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 import "../styles/Loging.css";
+import axios from "axios";
 
 export default function Login() {
   const [activeForm, setActiveForm] = useState("login");
+
+  const navigate = useNavigate();
+  const { setIsLoggedIn } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("http://localhost:8080/login", { email, password })
+      .then((res) => {
+        console.log(res);
+        setIsLoggedIn(true);
+        navigate("/home");
+      })
+      .catch((err) => console.log(err));
+  }
 
   const switchForm = (formType) => {
     setActiveForm(formType);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    if (activeForm === "login") {
-      // Login form logic
-    } else {
-      // Sign-up form logic
-    }
-  };
   return (
     <section className="forms-section">
       <h1 className="section-title">Start Here</h1>
@@ -41,11 +53,27 @@ export default function Login() {
               <legend>Please, enter your email and password for login.</legend>
               <div className="input-block">
                 <label htmlFor="login-email">E-mail</label>
-                <input id="login-email" type="email" required />
+                <input
+                  id="login-email"
+                  name="email"
+                  type="email"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                {/* {errors.email && <span>{errors.email}</span>} */}
               </div>
               <div className="input-block">
                 <label htmlFor="login-password">Password</label>
-                <input id="login-password" type="password" required />
+                <input
+                  id="login-password"
+                  name="password"
+                  type="password"
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+
+                {/* {errors.password && <span>{errors.password}</span>} */}
               </div>
             </fieldset>
             <button type="submit" className="btn-login">
@@ -53,6 +81,7 @@ export default function Login() {
             </button>
           </form>
         </div>
+
         <div
           className={`form-wrapper ${
             activeForm === "signup" ? "is-active" : ""

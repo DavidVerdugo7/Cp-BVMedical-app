@@ -1,60 +1,58 @@
 import React, { useState } from "react";
+import CardEquipment from "./CardEquipment";
+import { useLocation } from "react-router-dom";
 
 export default function Thermometer() {
-  const initialSpo2Values = [36, 40]; // Valores iniciales de peso
-  const initialPulseValues = [60, 60]; // Valores iniciales de Pulse
-  const [spo2Values, setSpo2Values] = useState(initialSpo2Values);
-  const [pulseValues, setPulseValues] = useState(initialPulseValues);
-  const [isFunctionalYes, setIsFunctionalYes] = useState(null);
-  const [location, setLocation] = useState("");
-  const [comments, setComments] = useState("");
+  const initialTempValues = [36, 40]; // Valores iniciales de temperatura
 
-  const handleChange = (type, index, value) => {
-    if (type === "spo2") {
-      const updatedValues = [...spo2Values];
+  const [tempValues, setTempValues] = useState(initialTempValues);
+
+  const [isFunctionalYes, setIsFunctionalYes] = useState(null);
+
+  const [comments, setComments] = useState("");
+  const initialCommentValues = ["", ""]; // Valores iniciales de las áreas de texto
+  const [commentValues, setCommentValues] = useState(initialCommentValues);
+
+  const initialTextAreaValues = ["", ""]; // Asegúrate de que esto coincide con la cantidad de temperaturas
+  const [textAreaValues, setTextAreaValues] = useState(initialTextAreaValues);
+  //Card Details
+  const location = useLocation();
+  const { selectedEquipment } = location.state || {};
+
+  const handleChange = (type, index, value, comment) => {
+    if (type === "temperature") {
+      const updatedValues = [...tempValues];
       updatedValues[index] = value;
-      setSpo2Values(updatedValues);
-    } else if (type === "pulse") {
-      const updatedValues = [...pulseValues];
-      updatedValues[index] = value;
-      setPulseValues(updatedValues);
+      setTempValues(updatedValues);
+
+      const updatedComments = [...commentValues];
+      updatedComments[index] = comment;
+      setCommentValues(updatedComments);
+
+      const updatedTextAreaValues = [...textAreaValues];
+      updatedTextAreaValues[index] = comment;
+      setTextAreaValues(updatedTextAreaValues);
     }
   };
 
   const incrementValue = (type, index) => {
-    if (type === "spo2") {
-      const updatedValues = [...spo2Values];
+    if (type === "temperature") {
+      const updatedValues = [...tempValues];
       if (updatedValues[index] < 100) {
         updatedValues[index] += 1;
-        setSpo2Values(updatedValues);
-      }
-    } else if (type === "pulse") {
-      const updatedValues = [...pulseValues];
-      if (updatedValues[index] < 100) {
-        updatedValues[index] += 1;
-        setPulseValues(updatedValues);
+        setTempValues(updatedValues);
       }
     }
   };
 
   const decrementValue = (type, index) => {
-    if (type === "spo2") {
-      const updatedValues = [...spo2Values];
+    if (type === "temperature") {
+      const updatedValues = [...tempValues];
       if (updatedValues[index] > 0) {
         updatedValues[index] -= 1;
-        setSpo2Values(updatedValues);
-      }
-    } else if (type === "pulse") {
-      const updatedValues = [...pulseValues];
-      if (updatedValues[index] > 0) {
-        updatedValues[index] -= 1;
-        setPulseValues(updatedValues);
+        setTempValues(updatedValues);
       }
     }
-  };
-
-  const handleLocationChange = (e) => {
-    setLocation(e.target.value);
   };
 
   const handleCommentsChange = (e) => {
@@ -62,38 +60,62 @@ export default function Thermometer() {
   };
 
   const handleStatus = (status) => {
-    // Manejar la lógica para los botones de "Failed" y "Verified"
     if (status === "Failed") {
-      // Lógica para el estado "Failed"
+      handlePostRequest(status, selectedEquipment.id);
     } else if (status === "Verified") {
-      // Lógica para el estado "Verified"
+      handlePostRequest(status, selectedEquipment.id);
     }
   };
-
   return (
-    <div className="cardForm p-10 md:p-6  justify-center mt-28">
+    <div className="cardForm  p-2 sm:py-6 lg:p-6 justify-center my-2 mx-12  lg:mt-6  sm:mx-24 lg:mx-64">
+      {selectedEquipment ? (
+        <CardEquipment equipment={selectedEquipment} />
+      ) : (
+        <p>No equipment selected</p>
+      )}
       <div>
         <div>
           <h1>Temperature (c)</h1>
-          {spo2Values.map((spo2, index) => (
-            <div key={index}>
-              <button onClick={() => decrementValue("spo2", index)}>-</button>
+          {tempValues.map((temperature, index) => (
+            <div
+              className="flex justify-evenly items-center flex-wrap mt-4 sm:w-full"
+              key={index}
+            >
+              <button
+                className="btn btn-outline btn-warning"
+                onClick={() => decrementValue("temperature", index)}
+              >
+                -
+              </button>
               <input
                 className="input input-bordered w-20 max-w-xs m-4"
+                placeholder="temp"
                 type="number"
-                value={spo2}
+                value={temperature}
                 onChange={(e) =>
-                  handleChange("spo2", index, parseInt(e.target.value))
+                  handleChange("temperature", index, parseInt(e.target.value))
                 }
               />
-              <button onClick={() => incrementValue("spo2", index)}>+</button>
+              <button
+                className="btn btn-outline btn-success"
+                onClick={() => incrementValue("temperature", index)}
+              >
+                +
+              </button>
               <textarea
                 className="textarea textarea-bordered"
-                placeholder="kg"
-                value={location}
-                onChange={handleLocationChange}
-                rows="2"
-                cols="40"
+                placeholder="°C"
+                value={textAreaValues[index]}
+                onChange={(e) =>
+                  handleChange(
+                    "temperature",
+                    index,
+                    temperature,
+                    e.target.value
+                  )
+                }
+                rows="1"
+                cols="2"
               />
             </div>
           ))}
@@ -102,9 +124,9 @@ export default function Thermometer() {
       </div>
 
       {/*  CHECKBOX */}
-      <div>
-        <h2>Functional</h2>
 
+      <h2>Functional</h2>
+      <div className="flex justify-evenly items-center flex-wrap mt-4 sm:w-full ">
         <div className="form-control  items-center">
           <label className="cursor-pointer label">
             <p className="label-text">Yes</p>
@@ -150,20 +172,21 @@ export default function Thermometer() {
         />
       </div>
       {/* BUTTONS TO SUBMMIT */}
+      <div className="flex justify-evenly items-center flex-wrap sm:flex-nowrap md:flex-wrap">
+        <button
+          className="btn mt-10 mr-10 btn-error"
+          onClick={() => handleStatus("Failed")}
+        >
+          Failed
+        </button>
 
-      <button
-        className="btn mt-10 mr-10 btn-error"
-        onClick={() => handleStatus("Failed")}
-      >
-        Failed
-      </button>
-
-      <button
-        className="btn mt-10 ml-10 btn-success"
-        onClick={() => handleStatus("Verified")}
-      >
-        Verified
-      </button>
+        <button
+          className="btn mt-10 ml-10 btn-success"
+          onClick={() => handleStatus("Verified")}
+        >
+          Verified
+        </button>
+      </div>
     </div>
   );
 }

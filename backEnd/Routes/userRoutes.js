@@ -23,4 +23,14 @@ router.delete("/:id", (req, res) => {
   Controllers.userController.deleteUser(req, res);
 });
 
+// Registrar un nuevo usuario
+router.post("/register", (req, res) => {
+  Controllers.userController.registerUser(req.body, res);
+});
+
+// Autenticar un usuario existente
+router.post("/login", (req, res) => {
+  Controllers.userController.loginUser(req.body, res);
+});
+
 module.exports = router;

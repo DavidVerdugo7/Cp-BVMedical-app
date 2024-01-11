@@ -5,7 +5,8 @@ const EquipmentDetails = ({ equipment }) => {
   const navigate = useNavigate();
 
   const handleAssessment = (equipment) => {
-    navigate(`/${equipment.equipmentType}`, {
+    const equipmentType = equipment.equipmentType.replace(" ", "");
+    navigate(`/${equipmentType}`, {
       state: { selectedEquipment: equipment },
     });
   };
