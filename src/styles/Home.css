@@ -1,0 +1,18 @@
+.inputStyles {
+  transition: border-color 0.3s;
+  border-color: #3f4273;
+}
+
+.inputStyles:hover {
+  border-color: #9c75e7;
+}
+
+.cardForm {
+  background-color: #3f4273;
+  /* margin: 0 12em 0 12em;
+  padding: 4em 5em 4em 5em; */
+  border-radius: 10px;
+  /* display: flex;
+  align-items: center;
+  flex-direction: column; */
+}

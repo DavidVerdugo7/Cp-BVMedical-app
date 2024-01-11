@@ -1,0 +1,19 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  /* max-width: 100vh; */
+  /* margin: 0 auto; */
+  padding-bottom: 8rem;
+  text-align: center;
+  background: #242746;
+  min-height: 100vh;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
