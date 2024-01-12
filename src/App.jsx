@@ -12,6 +12,7 @@ import Scale from "./components/Scale";
 import Thermometer from "./components/Thermometer";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./hooks/AuthContext";
+import About from "./pages/AboutUs";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/pulseOximeter" element={<PulseOximeter />} />
             <Route path="/scale" element={<Scale />} />
             <Route path="/thermometer" element={<Thermometer />} />
+            <Route path="/aboutus" element={<About />} />
           </Routes>
           <Footer />
         </BrowserRouter>

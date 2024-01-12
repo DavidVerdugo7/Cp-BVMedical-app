@@ -21,21 +21,13 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="navbar bg-base-100 mb-8" style={navbarStyles}>
+      <div className="navbar bg-base-100 mb-1" style={navbarStyles}>
         <div className="flex-1">
-          {/* <a className="btn btn-ghost text-xl">VBMedical</a> */}
           <Link className="btn btn-ghost text-xl" to="/home">
             VBMedical
           </Link>
         </div>
         <div className="flex-none gap-2">
-          {/* <div className="form-control">
-            <input
-              type="text"
-              placeholder="Search"
-              className="input input-bordered w-24 md:w-auto"
-            />
-          </div> */}
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -60,7 +52,7 @@ export default function NavBar() {
                 <Link to="/home">🔎 &nbsp; &nbsp; ID Search</Link>
               </li>
               <li className="mt-5">
-                <a>🩻 &nbsp; &nbsp; About Us</a>
+                <Link to="/aboutus">🩻 &nbsp; &nbsp; About Us</Link>
               </li>
               <hr
                 className="mt-40"

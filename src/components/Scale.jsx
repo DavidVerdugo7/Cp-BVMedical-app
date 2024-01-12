@@ -1,36 +1,116 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import CardEquipment from "./CardEquipment";
 
 import { useLocation } from "react-router-dom";
+import { AuthContext } from "../hooks/AuthContext";
 
 export default function Scale() {
-  const initialScaleValues = [50, 90]; // Valores iniciales de escala
-  const initialReadingValues = [60, 60]; // Valores iniciales de lectura
-  const [scaleValues, setScaleValues] = useState(initialScaleValues);
-  const [readingValues, setReadingValues] = useState(initialReadingValues);
-  const [isFunctionalYes, setIsFunctionalYes] = useState(null);
-  const [commentValues, setCommentValues] = useState(["", ""]);
-  const [comments, setComments] = useState("");
-  //utilizando hook
+  const INITIAL_SCALE_VALUES = [50, 90];
+  const INITIAL_READING_VALUES = [60, 60];
 
+  const [scaleValues, setScaleValues] = useState(INITIAL_SCALE_VALUES);
+  const [readingValues, setReadingValues] = useState(INITIAL_READING_VALUES);
+  //
+  const [isFunctionalYes, setIsFunctionalYes] = useState(null);
+
+  // State initialization
+  const [scaleComment1, setScaleComment1] = useState("");
+  const [scaleComment2, setScaleComment2] = useState("");
+  const [generalComments, setGeneralComments] = useState("");
+
+  //calling the user id
+  // const { userId } = useContext(AuthContext);
+  const { userId, isLoggedIn } = useContext(AuthContext);
   const location = useLocation();
   const { selectedEquipment } = location.state || {};
 
-  const handleChange = (type, index, value, comment) => {
+  //Handlers
+
+  const handleChange = (type, index, value) => {
     if (type === "scale") {
       const updatedValues = [...scaleValues];
       updatedValues[index] = value;
       setScaleValues(updatedValues);
+
+      if (index === 0) {
+        setScaleComment1(value);
+      } else if (index === 1) {
+        setScaleComment2(value);
+      }
     } else if (type === "reading") {
       const updatedValues = [...readingValues];
       updatedValues[index] = value;
       setReadingValues(updatedValues);
     }
-    const updatedComments = [...commentValues];
-    updatedComments[index] = comment;
-    setCommentValues(updatedComments);
   };
 
+  // Handler
+  const handleScaleCommentChange = (index, value) => {
+    if (index === 1) {
+      setScaleComment1(value);
+    } else if (index === 2) {
+      setScaleComment2(value);
+    }
+  };
+
+  const handleGeneralCommentsChange = (e) => {
+    const value = e.target.value;
+
+    setGeneralComments(value);
+  };
+
+  //POST request to DB
+
+  const handlePostRequest = async (status, equipmentId, userId) => {
+    try {
+      // Constructing dataInput for scale comments
+      const scaleComments = [scaleComment1, scaleComment2];
+      const dataInput = scaleComments
+        .map((comment, index) => `Scale Reading ${index + 1}: ${comment} kg`)
+        .join("; ");
+
+      // Extracting other required values
+      const functional = isFunctionalYes === true;
+      const verified = status === "Verified";
+      console.log("generalComments:", generalComments);
+      // Making the POST request
+      const response = await fetch(
+        "http://localhost:8080/api/assessments/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            equipmentID: equipmentId,
+            userID: userId,
+            dataInput: dataInput,
+            comments: generalComments,
+            Functional: functional,
+            verified: verified,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleStatus = (status) => {
+    if (isLoggedIn && (status === "Failed" || status === "Verified")) {
+      handlePostRequest(status, selectedEquipment.id, userId);
+      console.log("userId:", userId);
+    }
+  };
+
+  //Button + and - functions
   const incrementValue = (type, index) => {
     if (type === "scale") {
       const updatedValues = [...scaleValues];
@@ -60,45 +140,6 @@ export default function Scale() {
         updatedValues[index] -= 1;
         setReadingValues(updatedValues);
       }
-    }
-  };
-
-  const handleCommentsChange = (e) => {
-    setComments(e.target.value);
-  };
-  //POST request to DB
-  const handlePostRequest = async (status, equipmentId) => {
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/assessments/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: status,
-            scaleValues: scaleValues,
-            readingValues: readingValues,
-            comments: comments,
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      console.log("Success:", data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleStatus = (status) => {
-    if (status === "Failed") {
-      handlePostRequest(status, selectedEquipment.id);
-    } else if (status === "Verified") {
-      handlePostRequest(status, selectedEquipment.id);
     }
   };
 
@@ -133,7 +174,7 @@ export default function Scale() {
                       "scale",
                       index,
                       parseInt(e.target.value),
-                      commentValues[index]
+                      generalComments[index]
                     )
                   }
                 />
@@ -143,16 +184,20 @@ export default function Scale() {
                 >
                   +
                 </button>
-                <textarea
-                  className="textarea textarea-bordered"
-                  placeholder="kg"
-                  value={commentValues[index]}
-                  onChange={(e) =>
-                    handleChange("scale", index, scale, e.target.value)
-                  }
-                  rows="1"
-                  cols="2"
-                />
+
+                {index === 0 || index === 1 ? (
+                  <textarea
+                    className="textarea textarea-bordered"
+                    placeholder="kg"
+                    name={`scaleComment${index + 1}`}
+                    value={index === 0 ? scaleComment1 : scaleComment2}
+                    onChange={(e) =>
+                      handleScaleCommentChange(index + 1, e.target.value)
+                    }
+                    rows="1"
+                    cols="2"
+                  />
+                ) : null}
               </div>
             ))}
           </div>
@@ -196,10 +241,11 @@ export default function Scale() {
         <h2>Comments</h2>
         <div className="flex justify-evenly items-center flex-wrap">
           <textarea
+            name="generalComments"
             className=" textarea textarea-bordered mt-4 "
             placeholder="comments"
-            value={comments}
-            onChange={handleCommentsChange}
+            value={generalComments}
+            onChange={handleGeneralCommentsChange}
             rows="3"
             cols="40"
           />
