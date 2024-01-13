@@ -9,7 +9,8 @@ export default function Login() {
   const [activeForm, setActiveForm] = useState("login");
 
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, setUserId } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,7 +21,12 @@ export default function Login() {
       .then((res) => {
         console.log(res);
         setIsLoggedIn(true);
+
+        const userIdFromResponse = res.data.userId;
+        setUserId(userIdFromResponse);
         navigate("/home");
+        setUserId(res.data.userId);
+        console.log(res);
       })
       .catch((err) => console.log(err));
   }

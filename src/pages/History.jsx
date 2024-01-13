@@ -1,11 +1,29 @@
+import React, { useEffect, useState } from "react";
+import { FetchAssessment } from "../API/FetchAssessment";
+
 export default function History() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const assessmentData = await FetchAssessment();
+        setData(assessmentData);
+      } catch (error) {
+        // Manejar errores si es necesario
+        console.error("Error fetching assessment data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
-      <div className="overflow-x-auto">
+      <div className="overflow-x p-2 sm:py-6 lg:p-6 justify-center my-2 mx-12  lg:mt-6  sm:mx-10 lg:mx-5">
         <table className="table table-xs">
           <thead>
             <tr>
-              <th></th>
               <th>ShortCode</th>
               <th>EquipmentType</th>
               <th>Madeby</th>
@@ -14,17 +32,21 @@ export default function History() {
               <th>Update at</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr>
-              <th>id</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
-              <td>Littel, Schaden and Vandervort</td>
-              <td>Canada</td>
-              <td>12/16/2020</td>
-              <td>Blue</td>
-            </tr>
+            {data.map((item, index) => (
+              <tr key={index}>
+                <td>{item.id}</td>
+                <td>{item.equipmentID}</td>
+                <td>{item.userID}</td>
+                <td>{item.dataInput}</td>
+                <td>{item.comments}</td>
+                <td>{item.Functional ? "Yes" : "No"}</td>
+                <td>{item.verified ? "Yes" : "No"}</td>
+              </tr>
+            ))}
           </tbody>
+
           <tfoot>
             <tr>
               <th>ShortCode</th>

@@ -3,14 +3,14 @@ function Validation(values) {
     throw new Error("Validation expects an object as parameter");
   }
 
-  const error = {}; // Inicializar como un objeto vacío en lugar de un número
+  const error = {};
   const email_pattern = /^[^\s@]+@[^\s@]+\-[^\s@]+$/;
   const password_pattern = /^[a-zA-Z0-9]{8,}$/;
 
   if (values.email === "") {
-    error.email = "Email should not be empty"; // Corregir el mensaje de error
+    error.email = "Email should not be empty";
   } else if (!email_pattern.test(values.email)) {
-    error.email = "Email format is invalid"; // Corregir el mensaje de error
+    error.email = "Email format is invalid";
   } else {
     error.email = "";
   }
@@ -18,7 +18,7 @@ function Validation(values) {
   if (values.password === "") {
     error.password = "Password should not be empty";
   } else if (!password_pattern.test(values.password)) {
-    error.password = "Password format is invalid"; // Corregir el mensaje de error
+    error.password = "Password format is invalid";
   } else {
     error.password = "";
   }
