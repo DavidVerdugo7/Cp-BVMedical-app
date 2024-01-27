@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import { Navigate } from "react-router-dom";
 import ItemSpecs from "./components/CardEquipment";
 
 import Home from "./pages/Home";
@@ -21,6 +21,7 @@ function App() {
         <BrowserRouter>
           <NavBar />
           <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/cardEquipment" element={<ItemSpecs />} />
