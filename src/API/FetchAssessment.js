@@ -1,12 +1,11 @@
-export async function FetchEquipmentData() {
+export async function FetchAssessment() {
   try {
-    const response = await fetch(
-      "http://localhost:8080/api/medical-equipment/"
-    );
+    const response = await fetch("http://localhost:8080/api/assessments");
 
     if (!response.ok) {
-      throw new Error("Network response error");
+      throw new Error(`Error fetching data: ${response.statusText}`);
     }
+
     const data = await response.json();
 
     console.log("Data received:", data);
