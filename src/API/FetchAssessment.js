@@ -1,12 +1,30 @@
-import axios from "axios";
+// export async function FetchAssessment() {
+//   try {
+//     const response = await fetch("http://localhost:8080/api/assessments");
 
+//     if (!response.ok) {
+//       throw new Error(`Error fetching data: ${response.statusText}`);
+//     }
+
+//     const data = await response.json();
+
+//     console.log("Data received:", data);
+
+//     return Array.isArray(data) ? data : [];
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     throw error;
+//   }
+// }
 export async function FetchAssessment() {
   try {
-    const response = await axios.get("http://localhost:8080/api/assessments/");
+    const response = await fetch("http://localhost:8080/api/assessments");
 
-    const data = Array.isArray(response.data) ? response.data : [];
+    if (!response.ok) {
+      throw new Error(`Error fetching data: ${response.statusText}`);
+    }
 
-    console.log("Datos establecidos:", data);
+    const data = await response.json();
 
     console.log("Data received:", data);
 
